@@ -137,6 +137,8 @@ locateBase() {
 }
 
 locateData() {
+    echo trelele
+    echo $KARAF_DATA
     if [ "x$KARAF_DATA" != "x" ]; then
         if [ ! -d "$KARAF_DATA" ]; then
             die "KARAF_DATA is not valid: $KARAF_DATA"
