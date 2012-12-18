@@ -1,7 +1,7 @@
 echo "tre:"
 echo $OPENSHIFT_DATA_DIR
-export KARAF_HOME=$OPENSHIFT_REPO_DIR/karaf
-export KARAF_BASE=$OPENSHIFT_REPO_DIR/karaf
+export KARAF_HOME=${OPENSHIFT_REPO_DIR}/karaf
+export KARAF_BASE=${OPENSHIFT_REPO_DIR}/karaf
 export KARAF_DATA=$OPENSHIFT_DATA_DIR
-./karaf
+#./karaf server
 
