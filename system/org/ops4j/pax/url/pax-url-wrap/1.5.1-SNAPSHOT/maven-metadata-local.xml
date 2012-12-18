@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>org.ops4j.pax.url</groupId>
+  <artifactId>pax-url-wrap</artifactId>
+  <version>1.5.1-20121004.115918-2</version>
+  <versioning>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
+    <lastUpdated>20121112163428</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>1.5.1-20121004.115918-2</value>
+        <updated>20121112163428</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>

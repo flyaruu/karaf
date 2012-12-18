@@ -1,0 +1,78 @@
+<configuration debug="true">
+<!-- 
+	<consolePlugin />
+ -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- encoders are by default assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<!-- in the absence of the class attribute, it is assumed that the desired 
+			discriminator type is ch.qos.logback.classic.sift.MDCBasedDiscriminator -->
+		<discriminator>
+			<key>rpcName</key>
+			<defaultValue>unknown_service</defaultValue>
+		</discriminator>
+		<sift>
+			<!-- ${rootPath} -->
+			<appender name="NavajoFile-${rootPath}" class="ch.qos.logback.core.FileAppender">
+				<file>${rootPath}/logs/${rpcName}.log</file>
+				<append>true</append>
+				<encoder>
+					<pattern>%mdc{accessId} - %msg%n</pattern>
+				</encoder>
+			</appender>
+		</sift>
+	</appender>
+
+	<appender name="USER" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator>
+			<key>rpcUser</key>
+			<defaultValue>unknown_user</defaultValue>
+		</discriminator>
+		<sift>
+			<!-- ${rootPath} -->
+			<appender name="NavajoFile-${rootPath}" class="ch.qos.logback.core.FileAppender">
+				<file>${rootPath}/logs/${rpcUser}.log</file>
+				<append>true</append>
+				<encoder>
+					<pattern>%mdc{accessId} (%-5level) %mdc{rpcName}
+						%cyan(%logger{15})- %msg%n</pattern>
+				</encoder>
+			</appender>
+		</sift>
+	</appender>
+
+
+	<appender name="statlogger" class="ch.qos.logback.core.FileAppender">
+		<file>${rootPath}/logs/stats.log</file>
+		<append>true</append>
+		<encoder>
+			<pattern>- %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="stats" level="DEBUG" additivity="false">
+		<appender-ref ref="statlogger" />
+	</logger>
+
+
+	<root level="WARN">
+		<!-- <appender-ref ref="STDOUT" /> -->
+		<appender-ref ref="SIFT" />
+		<appender-ref ref="USER" />
+		<appender-ref ref="STDOUT" />
+	</root>
+	<logger name="com.dexels" level="DEBUG" />
+
+	<logger name="osgi.log" level="WARN" />
+	<logger name="org.apache.camel" level="WARN" />
+	<logger name="org.ops4j" level="WARN" />
+	<logger name="org.ops4j" level="WARN" />
+	<logger name="org.eclipse.jetty" level="WARN" />
+	<logger name="org.dexels" level="WARN" />
+</configuration>
