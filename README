@@ -1,53 +1,77 @@
-Feel free to change or remove this file, it is informational only.
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-Get started
-===========
-1. Add framework of choice to your repo.
-2. Modify .openshift/action_hooks/start to start your application.
-   The application is required to bind to $OPENSHIFT_INTERNAL_IP:8080.
-3. Modify .openshift/action_hooks/stop to stop your application.
-4. Commit and push your changes.
+Welcome to Apache Karaf
+=======================
+Apache Karaf is a small OSGi based kernel which provides a
+lightweight container onto which various bundles can be deployed.
 
-Repo layout
-===========
-static/ - Externally exposed static content goes here
-.openshift/action_hooks/start - Script that gets run to start your application
-.openshift/action_hooks/stop - Script that gets run to stop your application
-.openshift/action_hooks/pre_build - Script that gets run every git push before the build
-.openshift/action_hooks/build - Script that gets run every git push as part of the build process (on the CI system if available)
-.openshift/action_hooks/deploy - Script that gets run every git push after build but before the app is restarted
-.openshift/action_hooks/post_deploy - Script that gets run every git push after the app is restarted
+The following features are included:
+    * Hot deployment: Karaf supports hot deployment of OSGi bundles by monitoring
+      jar files inside the [home]/deploy directory. Each time a jar is copied in this folder,
+      it will be installed inside the runtime. You can then update or delete it and changes will
+      be handled automatically. In addition, the Kernel also supports exploded bundles and custom
+      deployers (a spring one is included by default).
+    * Dynamic configuration: Services are usually configured through the ConfigurationAdmin OSGi
+      service. Such configuration can be defined in Karaf using property files inside
+      the [home]/etc directory. These configurations are monitored and changes on the properties
+      files will be propagated to the services.
+    * Logging System: using a centralized logging back end supported by Log4J, Karaf
+      supports a number of different APIs (JDK 1.4, JCL, SLF4J, Avalon, Tomcat, OSGi)
+    * Provisioning: Provisioning of libraries or applications can be done through a number of
+      different ways, by which they will be downloaded locally, installed and started.
+    * Native OS integration: Karaf can be integrated into your own Operating System as
+      a service so that the lifecycle will be bound to your Operating System.
+    * Extensible Shell console: Karaf features a nice text console where you can manage the
+      services, install new applications or libraries and manage their state. This shell is easily
+      extensible by deploying new commands dynamically along with new features or applications.
+    * Remote access: use any SSH client to connect to the kernel and issue commands in the console
+    * Security framework based on JAAS
+    * Managing instances: Karaf provides simple commands for managing instances of Karaf.
+      You can easily create, delete, start and stop instances of Karaf through the console.
 
-Notes about layout
-==================
-Please leave the static directory in place (alter but do not delete) but feel
-free to create additional directories if needed.
+Getting Started
+===============
+For an Apache Karaf source distribution, please read
+BUILDING for instructions on building Apache Karaf.
 
-Note: Every time you push, everything in your remote repo dir gets recreated
-      please store long term items (like an sqlite database) in the OpenShift
-      data directory, which will persist between pushes of your repo.
-      The OpenShift data directory is accessible relative to the remote repo
-      directory (../data) or using a path constructed as
-      $OPENSHIFT_HOMEDIR/app-root/data.
+For an Apache Karaf binary distribution, please read
+RELEASE-NOTES for installation instructions and list of supported 
+and unsupported features.
+
+The PDF manual is the right place to find any information about Karaf.
+
+Alternatively, you can also find out how to get started here:
+    http://karaf.apache.org/
+
+If you need more help try talking to us on our mailing lists
+    http://karaf.apache.org/site/mailinglists.html
+
+If you find any issues with Apache Karaf, please submit reports
+with JIRA here:
+    http://issues.apache.org/jira/browse/KARAF
+
+We welcome contributions, and encourage you to get involved in the 
+Karaf community. If you'd like to learn more about how you can
+contribute, please see:
+    http://karaf.apache.org/index/community/contributing.html
+
+Many thanks for using Apache Karaf.
 
 
-Environment Variables
-=====================
+The Karaf Team
 
-OpenShift provides several environment variables to reference for ease
-of use.  The following list are some common variables but far from exhaustive:
-
-    $OPENSHIFT_INTERNAL_IP            - IP Address assigned to the application
-    $OPENSHIFT_APP_NAME               - Application name
-    $OPENSHIFT_HOMEDIR/diy-0.1        - Application dir
-    $OPENSHIFT_HOMEDIR/app-root/data  - For persistent storage (between pushes)
-    $OPENSHIFT_TMP_DIR                - Temp storage (unmodified files deleted after 10 days)
-
-To get a full list of environment variables, simply add a line in your
-.openshift/action_hooks/build script that says "export" and push.
-
-
-Additional information
-======================
-
-Link to additional information will be here, when we have it :)
