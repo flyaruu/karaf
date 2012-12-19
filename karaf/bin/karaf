@@ -16,18 +16,8 @@
 #    limitations under the License.
 #
 
-
-echo "Starting Openshift Karaf"
-echo $OPENSHIFT_DATA_DIR
-export KARAF_HOME=${OPENSHIFT_REPO_DIR}/karaf
-export KARAF_BASE=${OPENSHIFT_REPO_DIR}/karaf
-export KARAF_DATA=$OPENSHIFT_DATA_DIR
-#./karaf server
-echo "End of Openshift Karaf"
-
-
-DIRNAME=`dirname $0`
-PROGNAME=`basename $0`
+DIRNAME=`dirname "$0"`
+PROGNAME=`basename "$0"`
 
 #
 # Sourcing environment settings for karaf similar to tomcats setenv
@@ -39,7 +29,7 @@ if [ -f "$DIRNAME/setenv" ]; then
 fi
 
 #
-# Set up some easily accessible MIN/MAX params for JVM mem usage
+# Check/Set up some easily accessible MIN/MAX params for JVM mem usage
 #
 if [ "x$JAVA_MIN_MEM" = "x" ]; then
     JAVA_MIN_MEM=128M
@@ -49,12 +39,13 @@ if [ "x$JAVA_MAX_MEM" = "x" ]; then
     JAVA_MAX_MEM=512M
     export JAVA_MAX_MEM
 fi
-
-#
-# Check the mode that initiated the script
-#
-if [ "x$1" != "x" ]; then
-    MODE=$1
+if [ "x$JAVA_PERM_MEM" = "x" ]; then
+    JAVA_PERM_MEM=16M
+    export JAVA_PERM_MEM
+fi
+if [ "x$JAVA_MAX_PERM_MEM" = "x" ]; then
+    JAVA_MAX_PERM_MEM=128M
+    export JAVA_MAX_PERM_MEM
 fi
 
 warn() {
@@ -130,7 +121,7 @@ locateHome() {
     # In POSIX shells, CDPATH may cause cd to write to stdout
     (unset CDPATH) >/dev/null 2>&1 && unset CDPATH
 
-    KARAF_HOME=`cd $DIRNAME/..; pwd`
+    KARAF_HOME=`cd "$DIRNAME/.."; pwd`
     if [ ! -d "$KARAF_HOME" ]; then
         die "KARAF_HOME is not valid: $KARAF_HOME"
     fi
@@ -147,8 +138,6 @@ locateBase() {
 }
 
 locateData() {
-    echo "Karaf base: $KARAF_BASE"
-    echo "Karaf data: $KARAF_DATA"
     if [ "x$KARAF_DATA" != "x" ]; then
         if [ ! -d "$KARAF_DATA" ]; then
             die "KARAF_DATA is not valid: $KARAF_DATA"
@@ -246,13 +235,6 @@ setupDebugOptions() {
 
     # Set Debug options if enabled
     if [ "x$KARAF_DEBUG" != "x" ]; then
-        # Ignore DEBUG in case of stop or client mode
-        if [ "x$MODE" = "xstop" ]; then
-            return
-        fi
-        if [ "x$MODE" = "xclient" ]; then
-            return
-        fi
         # Use the defaults if JAVA_DEBUG_OPTS was not set
         if [ "x$JAVA_DEBUG_OPTS" = "x" ]; then
             JAVA_DEBUG_OPTS="$DEFAULT_JAVA_DEBUG_OPTS"
@@ -268,16 +250,7 @@ setupDefaults() {
 
     #Set the JVM_VENDOR specific JVM flags
     if [ "$JVM_VENDOR" = "SUN" ]; then
-        #
-        # Check some easily accessible MIN/MAX params for JVM mem usage
-        #
-        if [ "x$JAVA_PERM_MEM" != "x" ]; then
-            DEFAULT_JAVA_OPTS="$DEFAULT_JAVA_OPTS -XX:PermSize=$JAVA_PERM_MEM"
-        fi
-        if [ "x$JAVA_MAX_PERM_MEM" != "x" ]; then
-            DEFAULT_JAVA_OPTS="$DEFAULT_JAVA_OPTS -XX:MaxPermSize=$JAVA_MAX_PERM_MEM"
-        fi
-        DEFAULT_JAVA_OPTS="-server $DEFAULT_JAVA_OPTS"
+        DEFAULT_JAVA_OPTS="-server $DEFAULT_JAVA_OPTS -XX:PermSize=$JAVA_PERM_MEM -XX:MaxPermSize=$JAVA_MAX_PERM_MEM -Dcom.sun.management.jmxremote"
     elif [ "$JVM_VENDOR" = "IBM" ]; then
         if $os400; then
             DEFAULT_JAVA_OPTS="$DEFAULT_JAVA_OPTS"
@@ -363,7 +336,7 @@ run() {
                 shift
                 ;;
             'server')
-                OPTS="-Dkaraf.startLocalConsole=false -Dkaraf.startRemoteShell=false"
+                OPTS="-Dkaraf.startLocalConsole=false -Dkaraf.startRemoteShell=true"
                 shift
                 ;;
             'client')
@@ -388,7 +361,7 @@ run() {
         JAVA_EXT_DIRS=`cygpath --path --windows "$JAVA_EXT_DIRS"`
     fi
     cd "$KARAF_BASE"
-    exec "$JAVA" $JAVA_OPTS -Djava.endorsed.dirs="${JAVA_ENDORSED_DIRS}" -Djava.ext.dirs="${JAVA_EXT_DIRS}" -Dkaraf.instances="${KARAF_HOME}/instances" -Dkaraf.home="$KARAF_HOME" -Dkaraf.base="$KARAF_BASE" -Dkaraf.data="$KARAF_DATA" -Djava.io.tmpdir="$KARAF_DATA/tmp" -Djava.util.logging.config.file="$KARAF_BASE/etc/java.util.logging.properties" $KARAF_OPTS $OPTS -classpath "$CLASSPATH" $MAIN "$@"
+    exec "$JAVA" $JAVA_OPTS -Djava.endorsed.dirs="${JAVA_ENDORSED_DIRS}" -Djava.ext.dirs="${JAVA_EXT_DIRS}" -Dkaraf.instances="${KARAF_HOME}/instances" -Dkaraf.home="$KARAF_HOME" -Dkaraf.base="$KARAF_BASE" -Dkaraf.data="$KARAF_DATA" -Djava.io.tmpdir="$KARAF_DATA/tmp" -Djava.util.logging.config.file="$KARAF_BASE/etc/java.util.logging.properties" -Dorg.ops4j.pax.web.listening.addresses="$OPENSHIFT_INTERNAL_IP" -Dorg.apache.karaf.shell.sshHost="$OPENSHIFT_SSH_HOST" -Dorg.apache.karaf.shell.sshPort="$OPENSHIFT_SSH_PORT" $KARAF_OPTS $OPTS -Dkaraf.shutdown.host="$OPENSHIFT_INTERNAL_IP" -classpath "$CLASSPATH" $MAIN "$@"
 }
 
 main() {
