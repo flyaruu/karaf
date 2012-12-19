@@ -16,6 +16,16 @@
 #    limitations under the License.
 #
 
+
+echo "Starting Openshift Karaf"
+echo $OPENSHIFT_DATA_DIR
+export KARAF_HOME=${OPENSHIFT_REPO_DIR}/karaf
+export KARAF_BASE=${OPENSHIFT_REPO_DIR}/karaf
+export KARAF_DATA=$OPENSHIFT_DATA_DIR
+#./karaf server
+echo "End of Openshift Karaf"
+
+
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
 
