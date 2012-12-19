@@ -15,6 +15,16 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
+
+if [ "x$OPENSHIFT_DATA_DIR" = "x" ]; then
+    OPENSHIFT_DATA_DIR=/Users/frank/git/karaf-openshift/data
+    export OPENSHIFT_DATA_DIR
+fi
+if [ "x$OPENSHIFT_REPO_DIR" = "x" ]; then
+    OPENSHIFT_REPO_DIR=/Users/frank/git/karaf-openshift
+    export OPENSHIFT_REPO_DIR
+fi
+
 echo "Starting Openshift Karaf"
 echo $OPENSHIFT_DATA_DIR
 export KARAF_HOME=${OPENSHIFT_REPO_DIR}/karaf
