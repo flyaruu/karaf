@@ -1,7 +1,4 @@
 <configuration debug="true">
-<!-- 
-	<consolePlugin />
- -->
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<!-- encoders are by default assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
 		<encoder>
