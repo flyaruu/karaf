@@ -24,6 +24,10 @@ if [ "x$OPENSHIFT_REPO_DIR" = "x" ]; then
     OPENSHIFT_REPO_DIR=/Users/frank/git/karaf-openshift
     export OPENSHIFT_REPO_DIR
 fi
+if [ "x$OPENSHIFT_INTERNAL_IP" = "x" ]; then
+    OPENSHIFT_INTERNAL_IP=0.0.0.0
+    export OPENSHIFT_INTERNAL_IP
+fi
 
 echo "Starting Openshift Karaf"
 echo $OPENSHIFT_DATA_DIR
